@@ -8,11 +8,11 @@ ___
 
 Les portes logiques sont des circuits électroniques qui possèdent des entrées et des sorties sur lesquelles on place et récupère des valeurs de bits. Les portes logiques ET-NON (nand) possèdent deux entrées A et B. La sortie Q est au niveau 0 (ou false) si toutes les entrées sont au niveau 1 (ou true). Une seule entrée au niveau 0 suffit pour que la sortie soit à 1. Les symboles de ce type de portes est représenté ci-dessous :
 
-<br><img src="images/tp-image1.png" height="200px"></img>
+<br><img src="images/tp-image1.png" height="75px"></img>
 
 Les portes logiques OU-NON (nor), qui possèdent également deux entrées A et B, ont leur sortie est au niveau 1 si toutes les entrées sont au niveau 0. Une seule entrée au niveau 1 suffit pour que la sortie soit à 0. Ce type de porte a pour symbole :
 
-<br><img src="images/tp-image2.png" height="200px"></img>
+<br><img src="images/tp-image2.png" height="75px"></img>
 
 Les circuits séquentiels sont obtenus par combinaison de portes logiques, avec certaines sorties qui sont rebouclées en entrée. Contrairement aux portes logiques, l’état des sorties des circuits séquentiels dépend non seulement de l’état des entrées mais aussi de l’état antérieur des sorties : ce sont des circuits dotés de mémoire.
 
