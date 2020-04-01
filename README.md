@@ -201,27 +201,27 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 
 > Pour effectuer les tests demandés et ainsi définir la table de vérité de chacune des portes, on crée 
 > ```Java
-/**
-	 * Cette méthode permet d'écrire la table de vérité de la porte logique
-	 * @return La table de vérité de la porte logique
-	 * @throws ExceptionPorteAChanger
-	 */
-	public String getTableVerite() throws ExceptionPorteAChanger 
-	{
-		StringBuilder tableVerite = new StringBuilder("Table de vérité :");
-		boolean[] valeurEntrees = {true, false};
-		
-		for(boolean valeurEntree1 : valeurEntrees)
-		{
-			for(boolean valeurEntree2 : valeurEntrees)
-			{
-				this.setEntrees(valeurEntree1, valeurEntree2);
-				tableVerite.append("\n" + this.toString());
-			}
-		}
-		
-		return tableVerite.toString();
-	}
+> /**
+>  * Cette méthode permet d'écrire la table de vérité de la porte logique
+>  * @return La table de vérité de la porte logique
+>  * @throws ExceptionPorteAChanger
+>  */
+> public String getTableVerite() throws ExceptionPorteAChanger 
+> {
+> 	StringBuilder tableVerite = new StringBuilder("Table de vérité :");
+> 	boolean[] valeurEntrees = {true, false};
+> 	
+> 	for(boolean valeurEntree1 : valeurEntrees)
+> 	{
+> 		for(boolean valeurEntree2 : valeurEntrees)
+> 		{
+> 			this.setEntrees(valeurEntree1, valeurEntree2);
+> 			tableVerite.append("\n" + this.toString());
+> 		}
+> 	}
+> 	
+> 	return tableVerite.toString();
+> }
 > ```
 
 4#3. Écrivez à présent une classe modélisant une bascule RS composée de 2 portes nor, et implémentant les méthodes :
