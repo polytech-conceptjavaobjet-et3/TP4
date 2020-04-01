@@ -42,7 +42,7 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > ```Java
 > ```
 
-4#4. On souhaite à présent ajouter aux portes logiques un nombre de cycles maximum au bout duquel la porte est à changer. On comptera comme cycle toute opération de lecture ou d’écriture sur la porte logique. Ajoutez le code nécessaire pour prendre en compte ce nombre de cycles maximum (qui pourra être défini au niveau de chaque porte particulière), puis mettez en œuvre la notion d’exception pour prendre en compte des erreurs au niveau des portes logiques ainsi qu'au niveau des bascules RS. Vous devrez avoir les trois types d'exceptions suivants : ExceptionPorteLogique, ExceptionPorteAChanger (sous-type de ExceptionPorteLogique), et ExceptionBasculeAReparer (qui devra renseigner sur quelle porte de la bascule doit être changée).
+4#4. On souhaite à présent ajouter aux portes logiques un nombre de cycles maximum au bout duquel la porte est à changer. On comptera comme cycle toute opération de lecture ou d’écriture sur la porte logique. Ajoutez le code nécessaire pour prendre en compte ce nombre de cycles maximum (qui pourra être défini au niveau de chaque porte particulière), puis mettez en œuvre la notion d’exception pour prendre en compte des erreurs au niveau des portes logiques ainsi qu'au niveau des bascules RS. Vous devrez avoir les trois types d'exceptions suivants : ExceptionPorteLogique, ExceptionPorteAChanger (sous-type de ExceptionPorteLogique), et ExceptionBasculeAReparer (qui devra renseigner quelle porte de la bascule doit être changée).
 
 > ```Java
 > ```
