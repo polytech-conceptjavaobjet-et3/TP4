@@ -10,7 +10,7 @@ Les portes logiques sont des circuits électroniques qui possèdent des entrées
 
 <br><div align="center"><img src="images/tp-image1.png" height="75px"></img></div><br>
 
-Les portes logiques OU-NON (nor), qui possèdent également deux entrées A et B, ont leur sortie est au niveau 1 si toutes les entrées sont au niveau 0. Une seule entrée au niveau 1 suffit pour que la sortie soit à 0. Ce type de porte a pour symbole :
+Les portes logiques OU-NON (nor), qui possèdent également deux entrées A et B, ont leur sortie au niveau 1 si toutes les entrées sont au niveau 0. Une seule entrée au niveau 1 suffit pour que la sortie soit à 0. Ce type de porte a pour symbole :
 
 <br><div align="center"><img src="images/tp-image2.png" height="75px"></img></div><br>
 
