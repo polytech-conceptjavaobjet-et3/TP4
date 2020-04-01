@@ -199,7 +199,29 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 
 4#2. Réalisez des tests au niveau de la classe permettant d'obtenir la table de vérité de chacune des portes. Pour cela, passez par des variables du type de votre classe représentant une porte logique (les méthodes invoquées ne dépendant pas du type concret particulier).
 
+> Pour effectuer les tests demandés et ainsi définir la table de vérité de chacune des portes, on crée 
 > ```Java
+/**
+	 * Cette méthode permet d'écrire la table de vérité de la porte logique
+	 * @return La table de vérité de la porte logique
+	 * @throws ExceptionPorteAChanger
+	 */
+	public String getTableVerite() throws ExceptionPorteAChanger 
+	{
+		StringBuilder tableVerite = new StringBuilder("Table de vérité :");
+		boolean[] valeurEntrees = {true, false};
+		
+		for(boolean valeurEntree1 : valeurEntrees)
+		{
+			for(boolean valeurEntree2 : valeurEntrees)
+			{
+				this.setEntrees(valeurEntree1, valeurEntree2);
+				tableVerite.append("\n" + this.toString());
+			}
+		}
+		
+		return tableVerite.toString();
+	}
 > ```
 
 4#3. Écrivez à présent une classe modélisant une bascule RS composée de 2 portes nor, et implémentant les méthodes :
@@ -208,6 +230,155 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 — une méthode pour afficher l’état de la bascule.
 
 > ```Java
+package et3.java.bascules;
+
+import et3.java.exceptions.ExceptionBasculeAReparer;
+import et3.java.exceptions.ExceptionPorteAChanger;
+import et3.java.portes.Nor;
+import et3.java.portes.PorteLogique;
+
+public class BasculeNorNor
+{
+	private Nor norR;
+	private Nor norS;
+	
+	private boolean r;
+	private boolean s;
+	private Boolean q;
+	private boolean qPrecedent;
+	
+	/**
+	 * Constructeur de la classe {@link BasculeNorNor}
+	 */
+	public BasculeNorNor()
+	{
+		this.s = false;
+		this.r = false;
+		this.q = false;
+		this.qPrecedent = false;
+		this.norR = new Nor(r, !q);
+		this.norS = new Nor(s, q);
+	}
+	
+	/**
+	 * Cette méthode permet d'avoir accès à l'entrée R de la bascule Nor-Nor
+	 * @return La valeur de l'entrée R de la bascule Nor-Nor
+	 */
+	public boolean getR()
+	{
+		return r;
+	}
+	
+	/**
+	 * Cette méthode permet de modifier la valeur de l'entrée R de la bascule Nor-Nor
+	 * @param r La nouvelle valeur de l'entrée R de la bascule Nor-Nor
+	 */
+	public void setR(boolean r)
+	{
+		this.r = r;
+		calculerQ();
+	}
+	
+	/**
+	 * Cette méthode permet d'avoir accès à la valeur de l'entrée S de la bascule Nor-Nor
+	 * @return La valeur de l'entrée S de la bascule Nor-Nor
+	 */
+	public boolean getS()
+	{
+		return s;
+	}
+	
+	/**
+	 * Cette méthode permet de modifier la valeur de l'entrée S de la bascule Nor-Nor
+	 * @param s La nouvelle valeur de l'entrée S de la bascule Nor-Nor
+	 */
+	public void setS(boolean s)
+	{
+		this.s = s;
+		calculerQ();
+	}
+	
+	/**
+	 * Cette méthode permet d'avoir accès à la valeur de la sortie Q de la bascule Nor-Nor
+	 * @return La valeur de la sortie Q de la bascule Nor-Nor
+	 */
+	public boolean getQ()
+	{
+		return q;
+	}
+	
+	/**
+	 * Cette méthode permet d'avoir accès à la négation de la valeur de la sortie Q de la bascule Nor-Nor
+	 * @return La valeur de la sortie Q de la bascule Nor-Nor
+	 */
+	public boolean getNonQ()
+	{
+		return !q;
+	}
+	
+	/**
+	 * Cette méthode permet de calculer et mettre à jour la sortie Q de la porte logique
+	 * @throws ExceptionBasculeAReparer
+	 */
+	public void calculerQ()
+	{
+		boolean newQ = false;
+		boolean nonNewQ = false;
+		
+		if(this.q != (Boolean) null)
+		{
+			this.qPrecedent = this.q;
+		}
+		else
+		{
+			this.qPrecedent = false;
+		}
+		
+		if(r != s)
+		{
+			//L’entrée S (set) met la bascule au travail et la sortie Q à la valeur 1
+			if(s)
+			{
+				this.q = true;
+			}
+			//L’entrée R (reset) remet la bascule au repos et la sortie Q à la valeur 0
+			else
+			{
+				this.q = false;
+			}
+			
+			return;
+		}
+		
+		//Si on n'est pas dans le cas de figure (r = 1 XOR s = 1)
+		norR.setEntrees(r, !qPrecedent);
+		newQ = norR.getSortie();
+		norS.setEntrees(s, qPrecedent);
+		nonNewQ = norS.getSortie();
+				
+		if(nonNewQ == !newQ)
+		{
+			this.q = newQ;
+		}
+		else
+		{
+			this.q = (Boolean) null;
+		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		if(q != (Boolean) null)
+		{
+			return "Qn-1 = " + qPrecedent + " | S = " + s + " | R = " + r + " | Qn = " + q;
+		}
+		else
+		{
+			return "Qn-1 = " + qPrecedent + " | S = " + s + " | R = " + r + " | Qn = non défini";
+		}
+	}
+}
 > ```
 
 4#4. On souhaite à présent ajouter aux portes logiques un nombre de cycles maximum au bout duquel la porte est à changer. On comptera comme cycle toute opération de lecture ou d’écriture sur la porte logique. Ajoutez le code nécessaire pour prendre en compte ce nombre de cycles maximum (qui pourra être défini au niveau de chaque porte particulière), puis mettez en œuvre la notion d’exception pour prendre en compte des erreurs au niveau des portes logiques ainsi qu'au niveau des bascules RS. Vous devrez avoir les trois types d'exceptions suivants : ExceptionPorteLogique, ExceptionPorteAChanger (sous-type de ExceptionPorteLogique), et ExceptionBasculeAReparer (qui devra renseigner quelle porte de la bascule doit être changée).
