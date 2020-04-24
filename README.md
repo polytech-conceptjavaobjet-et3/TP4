@@ -229,6 +229,12 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 — les méthodes setS et setR pour changer l’entrée de la bascule et calculer un nouvel état ;
 — une méthode pour afficher l’état de la bascule.
 
+> Pour résumer le fonctionnement de la bascule RS :
+> - Si S est `true` et R est `false`, alors Q^(_n+1) est `true`
+> - Si S est `false` et R est `true`, alors Q^(_n+1) est `false`
+> - Si S est `false` et R est `true`, alors Q^(_n+1) vaut Q^(_n)
+> - Si S est `false` et R est `true`, alors Q^(_n+1) est indéterminé
+> 
 > ```Java
 > package et3.java.bascules;
 > 
@@ -383,10 +389,313 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 
 4#4. On souhaite à présent ajouter aux portes logiques un nombre de cycles maximum au bout duquel la porte est à changer. On comptera comme cycle toute opération de lecture ou d’écriture sur la porte logique. Ajoutez le code nécessaire pour prendre en compte ce nombre de cycles maximum (qui pourra être défini au niveau de chaque porte particulière), puis mettez en œuvre la notion d’exception pour prendre en compte des erreurs au niveau des portes logiques ainsi qu'au niveau des bascules RS. Vous devrez avoir les trois types d'exceptions suivants : ExceptionPorteLogique, ExceptionPorteAChanger (sous-type de ExceptionPorteLogique), et ExceptionBasculeAReparer (qui devra renseigner quelle porte de la bascule doit être changée).
 
+> On définit tout d'abord la classe d'exception mère `ExceptionPorteLogique` qui va hériter de la classe [`Exception`](https://docs.oracle.com/javase/7/docs/api/java/lang/Exception.html). 
+> 
 > ```Java
+> package et3.java.exceptions;
+> 
+> public class ExceptionPorteLogique extends Exception
+> {
+> 	/**
+> 	 * Constructeur de la classe {@link ExceptionPorteLogique}
+> 	 */
+> 	public ExceptionPorteLogique()
+> 	{
+> 		super();
+> 	}
+> 	
+> 	/**
+> 	 * Constructeur de la classe {@link ExceptionPorteLogique}
+> 	 * @param m Le message affiché quand cette exception est soulevée
+> 	 */
+> 	public ExceptionPorteLogique(String s)
+> 	{
+> 		super(s);
+> 	}
+> }
 > ```
+> 
+> Puis on définit les deux classes d'exception filles : `ExceptionPorteAChanger`, qui sera levée lorsqu'une porte atteint sont nombre maximum de cycles, et `ExceptionBasculeAReparer`, qui sera levée si une des portes de la bascule lève une exception `ExceptionPorteAChanger` :
+> 
+> ```Java
+> package et3.java.exceptions;
+> 
+> import et3.java.portes.Nor;
+> 
+> public class ExceptionPorteAChanger extends ExceptionPorteLogique
+> {
+> 	/**
+> 	 * Constructeur de la classe {@link ExceptionPorteAChanger}
+> 	 */
+> 	public ExceptionPorteAChanger()
+> 	{
+> 		super();
+> 	}
+> 	
+> 	/**
+> 	 * Constructeur de la classe {@link ExceptionPorteAChanger}
+> 	 * @param m Le message affiché quand cette exception est soulevée
+> 	 */
+> 	public ExceptionPorteAChanger(String m)
+> 	{
+> 		super (m);
+> 	}
+> }
+> ```
+> ```Java
+> package et3.java.exceptions;
+> 
+> public class ExceptionBasculeAReparer extends ExceptionPorteLogique
+> {
+> 	/**
+> 	 * Constructeur de la classe {@link ExceptionBasculeAReparer}
+> 	 */
+> 	public ExceptionBasculeAReparer()
+> 	{
+> 		super();
+> 	}
+> 	
+> 	/**
+> 	 * Constructeur de la classe {@link ExceptionBasculeAReparer}
+> 	 * @param m Le message affiché quand cette exception est soulevée
+> 	 */
+> 	public ExceptionBasculeAReparer(String m)
+> 	{
+> 		super(m);
+> 	}
+> }
+> ```
+> 
+> On ajoute ensuite dans la classe `PorteLogique`, les méthodes et attributs liés à la prise en compte des cycles :
+> 
+> ```Java
+> private final int nombreCyclesMaximum;
+> private int nombreCycles;
+>  
+>  	/**
+>  * Cette méthode permet d'avoir accès au nombre de cycles déjà effectués par la porte logique
+>  * @return Le nombre de cycles déjà effectués par la porte logique
+>  */
+> public int getNombreCycles()
+> {
+> 	return nombreCycles;
+> }
+> 
+> /**
+>  * Cette méthode permet d'avoir accès au nombre de cycles maximum que peut effectuer la porte logique
+>  * @return Le nombre de cycles maximum que peut effectuer la porte logique
+>  */
+> public int getNombreCyclesMaximum()
+> {
+> 	return nombreCyclesMaximum;
+> }
+> 
+> /**
+>  * Cette méthode permet d'ajouter un cycle à la porte logique
+>  * @throws ExceptionPorteAChanger
+>  */
+> private void ajouterCycle() throws ExceptionPorteAChanger
+> {
+> 	if (nombreCycles++ >= nombreCyclesMaximum ) 
+> 	{
+> 		throw new ExceptionPorteAChanger ("La porte (" + this.toString() + ") doit être changée, elle a déjà atteint " + nombreCycles + " cycles");
+> 	}
+> }
+> ```
+>
+> On ajoute également un appel à `ajouterCycle()` dans chaque méthode effectuant une opération sur la porte logique. La définition de ces méthodes devra donc inclure `throws ExceptionPorteAChanger`.
+> 
+> Ensuite, on s'assure de la prise en compte de cette exception dans la méthode `calculerQ()` de la classe `BasculeNorNor`, qui pourra lever une exception `ExceptionBasculeAReparer`, si elle detecte une `ExceptionPorteAChanger` sur une des portes :
+> 
+> ```Java
+> /**
+>  * Cette méthode permet de calculer et mettre à jour la sortie Q de la porte logique
+>  * @throws ExceptionBasculeAReparer
+>  */
+> public void calculerQ() throws ExceptionBasculeAReparer
+> {
+> 	boolean newQ = false;
+> 	boolean nonNewQ = false;
+> 	
+> 	if(this.q != (Boolean) null)
+> 	{
+> 		this.qPrecedent = this.q;
+> 	}
+> 	else
+> 	{
+> 		this.qPrecedent = false;
+> 	}
+> 	
+> 	if(r != s)
+> 	{
+> 		//L’entrée S (set) met la bascule au travail et la sortie Q à la valeur 1
+> 		if(s)
+> 		{
+> 			this.q = true;
+> 		}
+> 		//L’entrée R (reset) remet la bascule au repos et la sortie Q à la valeur 0
+> 		else
+> 		{
+> 			this.q = false;
+> 		}
+> 		
+> 		return;
+> 	}
+> 	
+> 	//Si on n'est pas dans le cas de figure (r = 1 XOR s = 1)
+> 	
+> 	try 
+> 	{
+> 		norR.setEntrees(r, !qPrecedent);
+> 		newQ = norR.getSortie();
+> 	}
+> 	catch(ExceptionPorteAChanger exception)
+> 	{
+> 		throw new ExceptionBasculeAReparer ("Une des portes de la bascule est défaillante : \n" + exception. getMessage ());
+> 	}
+> 	
+> 	try 
+> 	{
+> 		norS.setEntrees(s, qPrecedent);
+> 		nonNewQ = norS.getSortie();
+> 	}
+> 	catch(ExceptionPorteAChanger exception)
+> 	{
+> 		throw new ExceptionBasculeAReparer ("Une des portes de la bascule est défaillante : \n" + exception. getMessage ());
+> 	}
+> 	
+> 	
+> 	if(nonNewQ == !newQ)
+> 	{
+> 		this.q = newQ;
+> 	}
+> 	else
+> 	{
+> 		this.q = (Boolean) null;
+> 	}
+> }
+> ```
+> 
+> Finalement, on prend en compte cette exception dans chacune des méthodes de `BasculeNorNor` faisant appel à `calculerQ()` ou effectuant des opérations sur une des portes logiques de la bascule, en leur ajoutant la mention `throws ExceptionBasculeAReparer`
 
 4#5. (optionnel) Implémentez une stratégie de récupération du type d’erreur correspondant à l'exception ExceptionBasculeAReparer au niveau de la classe représentant la bascule RS (remplacement d’une porte logique défaillante).
 
+> Pour remplacer une porte logique, il faut simplement en créer un nouvelle. Il faut donc créer de nouvelles méthodes, ayant pour but de ré-initialiser chaque porte logique :
+> 
+> ```
+> /**
+>  * Cette méthode permet de remplacer la porte logique NorR par une nouvelle ayant 10 cycles maximum
+>  */
+> public void remplacerNorR()
+> {
+> 	this.norR = new Nor(r, !qPrecedent, 10);
+> }
+> 
+> /**
+>  * Cette méthode permet de remplacer la porte logique NorR
+>  * @param nombreCyclesMaximum Le nombre de cycles maximum de la nouvelle porte logique NorR
+>  */
+> public void remplacerNorR(int nombreCyclesMaximum)
+> {
+> 	this.norR = new Nor(r, !qPrecedent, nombreCyclesMaximum);
+> }
+> 
+> /**
+>  * Cette méthode permet de remplacer la porte logique NorS par une nouvelle ayant 10 cycles maximum
+>  */
+> public void remplacerNorS()
+> {
+> 	this.norS = new Nor(s, qPrecedent, 10);
+> }
+> 
+> /**
+>  * Cette méthode permet de remplacer la porte logique NorS
+>  * @param nombreCyclesMaximum Le nombre de cycles maximum de la nouvelle porte logique NorS
+>  */
+> public void remplacerNorS(int nombreCyclesMaximum)
+> {
+> 	this.norS = new Nor(s, qPrecedent, nombreCyclesMaximum);
+> }
+> ```
+> 
+> La réparation de la bascule doit avoir lieu si une porte de la bascule a atteint son nombre maximum de cycle. On va donc gérer l'exception au lieu de simplement la lever : 
+> 
 > ```Java
+> /**
+>  * Cette méthode permet de calculer et mettre à jour la sortie Q de la porte logique
+>  * @throws ExceptionBasculeAReparer
+>  */
+> public void calculerQ() throws ExceptionBasculeAReparer
+> {
+> 	boolean newQ = false;
+> 	boolean nonNewQ = false;
+> 	
+> 	if(this.q != (Boolean) null)
+> 	{
+> 		this.qPrecedent = this.q;
+> 	}
+> 	else
+> 	{
+> 		this.qPrecedent = false;
+> 	}
+> 	
+> 	if(r != s)
+> 	{
+> 		//L’entrée S (set) met la bascule au travail et la sortie Q à la valeur 1
+> 		if(s)
+> 		{
+> 			this.q = true;
+> 		}
+> 		//L’entrée R (reset) remet la bascule au repos et la sortie Q à la valeur 0
+> 		else
+> 		{
+> 			this.q = false;
+> 		}
+> 		
+> 		return;
+> 	}
+> 	
+> 	//Si on n'est pas dans le cas de figure (r = 1 XOR s = 1)
+> 	
+> 	try 
+> 	{
+> 		norR.setEntrees(r, !qPrecedent);
+> 		newQ = norR.getSortie();
+> 	}
+> 	catch(ExceptionPorteAChanger exception)
+> 	{
+> 		//throw new ExceptionBasculeAReparer ("Une des portes de la bascule est défaillante : \n" + exception. getMessage ());
+> 	
+> 		// 4#5
+> 		System.out.println("Une des portes de la bascule est défaillante : \n" + exception. getMessage ());
+> 		remplacerNorR();
+> 		System.out.println("La porte logique NorR a été remplacée");
+> 	}
+> 	
+> 	try 
+> 	{
+> 		norS.setEntrees(s, qPrecedent);
+> 		nonNewQ = norS.getSortie();
+> 	}
+> 	catch(ExceptionPorteAChanger exception)
+> 	{
+> 		//throw new ExceptionBasculeAReparer ("Une des portes de la bascule est défaillante : \n" + exception. getMessage ());
+> 		
+> 		// 4#5
+> 		System.out.println("Une des portes de la bascule est défaillante : \n" + exception. getMessage ());
+> 		remplacerNorS();
+> 		System.out.println("La porte logique NorS a été remplacée");
+> 	}
+> 	
+> 	
+> 	if(nonNewQ == !newQ)
+> 	{
+> 		this.q = newQ;
+> 	}
+> 	else
+> 	{
+> 		this.q = (Boolean) null;
+> 	}
+> }
+> 
 > ```
