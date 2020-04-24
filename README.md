@@ -4,7 +4,7 @@ Polytech Paris-Saclay | 2019-20
 
 ___
 
-A^test^
+A^test^<sub>a<\sub>
 # TP4
 
 Les portes logiques sont des circuits électroniques qui possèdent des entrées et des sorties sur lesquelles on place et récupère des valeurs de bits. Les portes logiques ET-NON (nand) possèdent deux entrées A et B. La sortie Q est au niveau 0 (ou false) si toutes les entrées sont au niveau 1 (ou true). Une seule entrée au niveau 0 suffit pour que la sortie soit à 1. Les symboles de ce type de portes est représenté ci-dessous :
