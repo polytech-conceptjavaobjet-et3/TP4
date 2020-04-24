@@ -225,12 +225,12 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > ```
 
 4#3. Écrivez à présent une classe modélisant une bascule RS composée de 2 portes nor, et implémentant les méthodes :
-— getS, getR, getQ, getNonQ pour obtenir l’état des valeurs correspondantes ;
-— les méthodes setS et setR pour changer l’entrée de la bascule et calculer un nouvel état ;
-— une méthode pour afficher l’état de la bascule.
+- `getS()`, `getR()`, `getQ()`, `getNonQ()` pour obtenir l’état des valeurs correspondantes ;
+- les méthodes `setS(boolean s)` et `setR(boolean r)` pour changer l’entrée de la bascule et calculer un nouvel état ;
+- une méthode pour afficher l’état de la bascule.
 
 > Pour résumer le fonctionnement de la bascule RS :
-> - Si S est `true` et R est `false`, alors Q^(_n+1) est `true`
+> - Si S est `true` et R est `false`, alors Q~n+1~ est `true`
 > - Si S est `false` et R est `true`, alors Q^(_n+1) est `false`
 > - Si S est `false` et R est `true`, alors Q^(_n+1) vaut Q^(_n)
 > - Si S est `false` et R est `true`, alors Q^(_n+1) est indéterminé
@@ -387,7 +387,7 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > }
 > ```
 
-4#4. On souhaite à présent ajouter aux portes logiques un nombre de cycles maximum au bout duquel la porte est à changer. On comptera comme cycle toute opération de lecture ou d’écriture sur la porte logique. Ajoutez le code nécessaire pour prendre en compte ce nombre de cycles maximum (qui pourra être défini au niveau de chaque porte particulière), puis mettez en œuvre la notion d’exception pour prendre en compte des erreurs au niveau des portes logiques ainsi qu'au niveau des bascules RS. Vous devrez avoir les trois types d'exceptions suivants : ExceptionPorteLogique, ExceptionPorteAChanger (sous-type de ExceptionPorteLogique), et ExceptionBasculeAReparer (qui devra renseigner quelle porte de la bascule doit être changée).
+4#4. On souhaite à présent ajouter aux portes logiques un nombre de cycles maximum au bout duquel la porte est à changer. On comptera comme cycle toute opération de lecture ou d’écriture sur la porte logique. Ajoutez le code nécessaire pour prendre en compte ce nombre de cycles maximum (qui pourra être défini au niveau de chaque porte particulière), puis mettez en œuvre la notion d’exception pour prendre en compte des erreurs au niveau des portes logiques ainsi qu'au niveau des bascules RS. Vous devrez avoir les trois types d'exceptions suivants : `ExceptionPorteLogique`, `ExceptionPorteAChanger` (sous-type de `ExceptionPorteLogique`), et `ExceptionBasculeAReparer` (qui devra renseigner quelle porte de la bascule doit être changée).
 
 > On définit tout d'abord la classe d'exception mère `ExceptionPorteLogique` qui va hériter de la classe [`Exception`](https://docs.oracle.com/javase/7/docs/api/java/lang/Exception.html). 
 > 
