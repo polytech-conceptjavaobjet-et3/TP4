@@ -4,7 +4,6 @@ Polytech Paris-Saclay | 2019-20
 
 ___
 
-A^test^<sub>a<\sub>
 # TP4
 
 Les portes logiques sont des circuits électroniques qui possèdent des entrées et des sorties sur lesquelles on place et récupère des valeurs de bits. Les portes logiques ET-NON (nand) possèdent deux entrées A et B. La sortie Q est au niveau 0 (ou false) si toutes les entrées sont au niveau 1 (ou true). Une seule entrée au niveau 0 suffit pour que la sortie soit à 1. Les symboles de ce type de portes est représenté ci-dessous :
@@ -231,10 +230,10 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 - une méthode pour afficher l’état de la bascule.
 
 > Pour résumer le fonctionnement de la bascule RS :
-> - Si S est `true` et R est `false`, alors Q~n+1~ est `true`
-> - Si S est `false` et R est `true`, alors Q^(_n+1) est `false`
-> - Si S est `false` et R est `true`, alors Q^(_n+1) vaut Q^(_n)
-> - Si S est `false` et R est `true`, alors Q^(_n+1) est indéterminé
+> - Si S est `true` et R est `false`, alors Q<sub>n+1</sub> est `true`
+> - Si S est `false` et R est `true`, alors Q<sub>n+1</sub> est `false`
+> - Si S est `false` et R est `true`, alors Q<sub>n+1</sub> vaut Q<sub>n</sub>
+> - Si S est `false` et R est `true`, alors Q<sub>n+1</sub> est indéterminé
 > 
 > ```Java
 > package et3.java.bascules;
