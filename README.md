@@ -578,7 +578,7 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > 
 > Finalement, on prend en compte cette exception dans chacune des méthodes de `BasculeNorNor` faisant appel à `calculerQ()` ou effectuant des opérations sur une des portes logiques de la bascule, en leur ajoutant la mention `throws ExceptionBasculeAReparer`
 
-4#5. (optionnel) Implémentez une stratégie de récupération du type d’erreur correspondant à l'exception ExceptionBasculeAReparer au niveau de la classe représentant la bascule RS (remplacement d’une porte logique défaillante).
+4#5. (optionnel) Implémentez une stratégie de récupération du type d’erreur correspondant à l'exception `ExceptionBasculeAReparer` au niveau de la classe représentant la bascule RS (remplacement d’une porte logique défaillante).
 
 > Pour remplacer une porte logique, il faut simplement en créer un nouvelle. Il faut donc créer de nouvelles méthodes, ayant pour but de ré-initialiser chaque porte logique :
 > 
