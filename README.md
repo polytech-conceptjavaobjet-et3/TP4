@@ -121,8 +121,6 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > ```Java
 > package et3.java.portes;
 > 
-> import et3.java.exceptions.ExceptionPorteAChanger;
-> 
 > public class Nand extends PorteLogique
 > {	
 > 	/**
@@ -159,8 +157,6 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > ```
 > ```Java
 > package et3.java.portes;
-> 
-> import et3.java.exceptions.ExceptionPorteAChanger;
 > 
 > public class Nor extends PorteLogique
 > {
@@ -204,9 +200,8 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > /**
 >  * Cette méthode permet d'écrire la table de vérité de la porte logique
 >  * @return La table de vérité de la porte logique
->  * @throws ExceptionPorteAChanger
 >  */
-> public String getTableVerite() throws ExceptionPorteAChanger 
+> public String getTableVerite()
 > {
 > 	StringBuilder tableVerite = new StringBuilder("Table de vérité :");
 > 	boolean[] valeurEntrees = {true, false};
@@ -238,8 +233,6 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > ```Java
 > package et3.java.bascules;
 > 
-> import et3.java.exceptions.ExceptionBasculeAReparer;
-> import et3.java.exceptions.ExceptionPorteAChanger;
 > import et3.java.portes.Nor;
 > import et3.java.portes.PorteLogique;
 > 
@@ -324,7 +317,6 @@ On envoie séparément et alternativement les signaux sur S et R. Dans le cas pa
 > 	
 > 	/**
 > 	 * Cette méthode permet de calculer et mettre à jour la sortie Q de la porte logique
-> 	 * @throws ExceptionBasculeAReparer
 > 	 */
 > 	public void calculerQ()
 > 	{
